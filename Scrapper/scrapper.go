@@ -18,20 +18,11 @@ func ScrapeContent() {
 	// Create HTTP client with timeout
 	client := &http.Client{}
 
-	//requestBytes := []byte(`{"action": "advanced_search", "info": {"0": {"cols": "last_close", "opts": ">", "cols1": "ema_5"}, "1": {"cols": "last_close", "opts": ">", "cols1": "ema_20"}, "2": {"cols": "last_close", "opts": "<", "cols1": "bband_upper"}, "3": {"cols": "", "opts": " like ", "cols1": ""}, "4": {"cols": "", "opts": " like ", "cols1": ""}, "5": {"cols": "atr", "opts": ">", "strs": "10"}, "6": {"cols": "adx", "opts": ">", "strs": "25"}, "7": {"cols": "avg_volume", "opts": ">", "strs": "500000"}, "8": {"cols": "p_symbol", "opts": " not like ", "strs": "%-%"}, "9": {"cols": "", "opts": " like ", "strs": ""}}}`)
-	//requestBytes := []byte(`json={"action": "advanced_search", "info": {"0": {"cols": "last_close", "opts": ">", "cols1": "ema_5"}, "1": {"cols": "last_close", "opts": ">", "cols1": "ema_20"}, "2": {"cols": "last_close", "opts": "<", "cols1": "bband_upper"}, "3": {"cols": "", "opts": " like ", "cols1": ""}, "4": {"cols": "", "opts": " like ", "cols1": ""}, "5": {"cols": "atr", "opts": ">", "strs": "10"}, "6": {"cols": "adx", "opts": ">", "strs": "25"}, "7": {"cols": "avg_volume", "opts": ">", "strs": "500000"}, "8": {"cols": "p_symbol", "opts": " not like ", "strs": "%-%"}, "9": {"cols": "", "opts": " like ", "strs": ""}}}&_=`)
-
-	//requestBytes := {"action": "advanced_search", "info": "{\"0\": {\"cols\": \"last_close\", \"opts\": \">\", \"cols1\": \"ema_5\"}, \"1\": {\"cols\": \"last_close\", \"opts\": \">\", \"cols1\": \"ema_20\"}, \"2\": {\"cols\": \"last_close\", \"opts\": \"<\", \"cols1\": \"bband_upper\"}, \"3\": {\"cols\": \"\", \"opts\": \" like \", \"cols1\": \"\"}, \"4\": {\"cols\": \"\", \"opts\": \" like \", \"cols1\": \"\"}, \"5\": {\"cols\": \"atr\", \"opts\": \">\", \"strs\": \"10\"}, \"6\": {\"cols\": \"adx\", \"opts\": \">\", \"strs\": \"25\"}, \"7\": {\"cols\": \"avg_volume\", \"opts\": \">\", \"strs\": \"500000\"}, \"8\": {\"cols\": \"p_symbol\", \"opts\": \" not like \", \"strs\": \"%-%\"}, \"9\": {\"cols\": \"\", \"opts\": \" like \", \"strs\": \"\"}}\\"}
-	//value, err := json.Marshal(requestBytes)
-
-	//var data = strings.NewReader(urlValues.Encode())
 	params := url.Values{}
 	params.Set("json", `{"action": "advanced_search", "info": {"0": {"cols": "last_close", "opts": ">", "cols1": "ema_5"}, "1": {"cols": "last_close", "opts": ">", "cols1": "ema_20"}, "2": {"cols": "last_close", "opts": "<", "cols1": "bband_upper"}, "3": {"cols": "", "opts": " like ", "cols1": ""}, "4": {"cols": "", "opts": " like ", "cols1": ""}, "5": {"cols": "atr", "opts": ">", "strs": "10"}, "6": {"cols": "adx", "opts": ">", "strs": "25"}, "7": {"cols": "avg_volume", "opts": ">", "strs": "500000"}, "8": {"cols": "p_symbol", "opts": " not like ", "strs": "%-%"}, "9": {"cols": "", "opts": " like ", "strs": ""}}}`)
 	value := params.Encode()
 	fmt.Println("received encoded string is : ", value)
 
-	//var data = strings.NewReader(`json=%7B%22action%22%3A%20%22advanced_search%22%2C%20%22info%22%3A%20%7B%220%22%3A%20%7B%22cols%22%3A%20%22last_close%22%2C%20%22opts%22%3A%20%22%3E%22%2C%20%22cols1%22%3A%20%22ema_5%22%7D%2C%20%221%22%3A%20%7B%22cols%22%3A%20%22last_close%22%2C%20%22opts%22%3A%20%22%3E%22%2C%20%22cols1%22%3A%20%22ema_20%22%7D%2C%20%222%22%3A%20%7B%22cols%22%3A%20%22last_close%22%2C%20%22opts%22%3A%20%22%3C%22%2C%20%22cols1%22%3A%20%22bband_upper%22%7D%2C%20%223%22%3A%20%7B%22cols%22%3A%20%22%22%2C%20%22opts%22%3A%20%22%20like%20%22%2C%20%22cols1%22%3A%20%22%22%7D%2C%20%224%22%3A%20%7B%22cols%22%3A%20%22%22%2C%20%22opts%22%3A%20%22%20like%20%22%2C%20%22cols1%22%3A%20%22%22%7D%2C%20%225%22%3A%20%7B%22cols%22%3A%20%22atr%22%2C%20%22opts%22%3A%20%22%3E%22%2C%20%22strs%22%3A%20%2210%22%7D%2C%20%226%22%3A%20%7B%22cols%22%3A%20%22adx%22%2C%20%22opts%22%3A%20%22%3E%22%2C%20%22strs%22%3A%20%2225%22%7D%2C%20%227%22%3A%20%7B%22cols%22%3A%20%22avg_volume%22%2C%20%22opts%22%3A%20%22%3E%22%2C%20%22strs%22%3A%20%22500000%22%7D%2C%20%228%22%3A%20%7B%22cols%22%3A%20%22p_symbol%22%2C%20%22opts%22%3A%20%22%20not%20like%20%22%2C%20%22strs%22%3A%20%22%25-%25%22%7D%2C%20%229%22%3A%20%7B%22cols%22%3A%20%22%22%2C%20%22opts%22%3A%20%22%20like%20%22%2C%20%22strs%22%3A%20%22%22%7D%7D%7D&_=`)
-	//fmt.Printf("printing data : %v", bytes.NewBuffer(requestBytes))
 	// Create and modify HTTP request before sending
 	request, err := http.NewRequest("POST", "https://www.icharts.in/includes/screener/EODScan.php", strings.NewReader(value))
 	if err != nil {
@@ -54,19 +45,18 @@ func ScrapeContent() {
 
 	// Make request
 	response, err := client.Do(request)
-	//response, err := http.Get("https://www.icharts.in/screener-eod.html")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer response.Body.Close()
 
 	data1, err := ioutil.ReadAll(response.Body)
-	html_output := string(data1)
+	htmlOutput := string(data1)
 	fmt.Println("****************************************************")
-	fmt.Printf("response : %+v \n", html_output)
+	fmt.Printf("response : %+v \n", htmlOutput)
 	fmt.Println("****************************************************")
 
-	htmlTokens := html.NewTokenizer(strings.NewReader(html_output))
+	htmlTokens := html.NewTokenizer(strings.NewReader(htmlOutput))
 	/*scrape := func(n *html.Node) {
 		for _, attribute := range  n.Attr {
 			fmt.Print(attribute.Key + " "+ attribute.Val + "\n")
@@ -99,18 +89,17 @@ func ScrapeContent() {
 			t := htmlTokens.Token()
 
 			// if a new row tag is found enter and starting reading each column tag present
-			isRow  := t.Data == "tr"
+			isRow := t.Data == "tr"
 			if isRow {
-				//fmt.Printf("\n \n")
+				//log.Printf("\n \n")
 				if len(rowData) > 0 {
 
 					stocksData = append(stocksData, rowData) //appending new row data to double array
 					rowData = make([]string, 0)
-				}else {
+				} else {
 					fmt.Println("I am in else condition of len(rowData)")
 					rowData = make([]string, 0)
 				}
-
 
 				_ = htmlTokens.Next() // navigate to next html token
 				td := htmlTokens.Token()
