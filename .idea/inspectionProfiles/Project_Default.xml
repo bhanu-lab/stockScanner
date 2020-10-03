@@ -1,0 +1,18 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="HelmChartMissingKeys" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="HelmChartUnknownKeys" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="HelmChartUnknownValues" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="HelmUnknownTemplates" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="HelmUnknownValues" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="KubernetesDeprecatedKeys" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="KubernetesDeprecatedResources" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="KubernetesDuplicatedEnvVars" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="KubernetesMissingKeys" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="KubernetesNonEditableKeys" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="KubernetesNonEditableResources" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="KubernetesUnknownKeys" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="KubernetesUnknownValues" enabled="true" level="ERROR" enabled_by_default="true" />
+  </profile>
+</component>
