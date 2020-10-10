@@ -1,3 +1,4 @@
+// types provide all data types used in stockScanner
 package types
 
 // used for determining whether a stock selected is Bearish or Bullish

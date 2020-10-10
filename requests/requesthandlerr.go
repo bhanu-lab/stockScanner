@@ -1,3 +1,4 @@
+// requests provides making requests to other API's or http requests
 package requests
 
 import (
@@ -8,8 +9,8 @@ import (
 )
 
 /*
- * CreateAPIRequestAndGetResponse creates request with params encoded required for getting desired response
- * and returns reponse
+ * CreateAPIRequestAndGetResponse creates request with params encoded, converts response from request to string
+ * returns error and string output of response
  */
 func CreateAPIRequestAndGetResponse(value string, client *http.Client) (error, string) {
 	// Create and modify HTTP request before sending

@@ -1,3 +1,4 @@
+// utils provides utilities for handling various utility operations
 package utils
 
 import (
@@ -31,4 +32,32 @@ func GetStockScannerType(args []string) int {
 		}
 	}
 	return types.BULLISH
+}
+
+/*
+ * GetCommandLineOptions takes all command line arguments as input
+ * returns all the options chosen
+ */
+func GetCommandLineOptions(args []string) []string {
+	var options []string
+
+	for _, arg := range args {
+
+		if strings.HasPrefix(arg, "-") {
+			choice := strings.ReplaceAll(arg, "-", "")
+			options = append(options, strings.Split(choice, "")...)
+		}
+	}
+
+	return options
+}
+
+// ValidateCommandLineOptions validates input parameters options provided
+func ValidateCommandLineOptions(options []string) bool {
+	if len(options) > 2 {
+		log.Printf("options provided are more than allowed")
+		return false
+	}
+
+	return true
 }
