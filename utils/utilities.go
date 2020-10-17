@@ -4,6 +4,7 @@ package utils
 import (
 	"golang.org/x/net/html"
 	"log"
+	"sort"
 	"stockScanner/types"
 	"strings"
 )
@@ -62,4 +63,53 @@ func ValidateCommandLineOptions(options []string) bool {
 	}
 
 	return true
+}
+
+/* FilterSimpleTechnicalValues filters output with only simple attribute values
+ * INPUT : [][]string slice
+ * OUTPUT : [][]string slice
+ */
+func FilterSimpleTechnicalValues(input [][]string) [][]string {
+	output := make([][]string, 0)                          // create filtered output placeholder
+	header := input[0]                                     // assign first row i.e header to compare against desired values
+	columnsToBeIncluded := getIndexNumbersToFilter(header) // receives row index values which are to be included in filtered output
+	sort.Ints(columnsToBeIncluded)
+	for _, row := range input {
+		filteredRow := make([]string, 0)
+		for _, valIdx := range columnsToBeIncluded { // iterate over columns to be included from original data
+			filteredRow = append(filteredRow, row[valIdx])
+		}
+		output = append(output, filteredRow)
+	}
+	return output
+}
+
+/*
+ * getIndexNumbersToFilter returns all index numbers of fields matching simpleAttributes defined in this function
+ * INPUT: slice string
+ * OUTPUT: slice of intergers
+ */
+func getIndexNumbersToFilter(header []string) []int {
+	var idxNums []int
+	// predefined slice of header values which are to be included in simple output option
+	simpleAttributes := []string{"p_symbol", "last_close", "avg_volume", "ema_8", "ema_20", "sma_50", "sma_200", "bband_upper", "bband_lower", "adx", "atr", "rsi"}
+	for idx, headerValue := range header {
+		if ok := IsValuePresentInStringSlice(headerValue, simpleAttributes); ok {
+			idxNums = append(idxNums, idx) // prepare list of index numbers which are to be included
+		}
+	}
+	return idxNums
+}
+
+/* IsValuePresentInStringSlice checks if string value present in given string slice
+ * INPUT: value string, slice string
+ * OUTPUT: boolean value
+ */
+func IsValuePresentInStringSlice(value string, list []string) bool {
+	for _, element := range list {
+		if ok := strings.EqualFold(value, element); ok {
+			return true
+		}
+	}
+	return false
 }

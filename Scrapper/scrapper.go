@@ -19,7 +19,7 @@ import (
  * -t stock option type
  * -s simple technical details only
  */
-func ScrapeContent(args []string) {
+func ScrapeContent(args []string, options []string) {
 	index := 0
 	// Create HTTP client with timeout
 	client := &http.Client{}
@@ -122,8 +122,17 @@ func ScrapeContent(args []string) {
 	if err != nil {
 		log.Panic("error while creating csv file check for errors while creating")
 	}
-	err = fileio.WriteCSVFile(csvFile, stocksData)
+	if ok := utils.IsValuePresentInStringSlice("s", options); ok { // if simple option given in command line filter out data
+		filteredData := utils.FilterSimpleTechnicalValues(stocksData)
+		err = fileio.WriteCSVFile(csvFile, filteredData)
+	} else { // if simple option is not provided in command line write all data
+		err = fileio.WriteCSVFile(csvFile, stocksData)
+	}
+
 	if err != nil {
 		log.Panic("not able to write to csv file error while writing to csv file")
 	}
 }
+
+//simpleAttributes := []string{"p_symbol", "last_close", "avg_volume", "ema_8", "ema_20", "sma_50", "sma_200", "bband_upper", "bband_lower", "adx", "atr", "rsi"}
+//p_symbol	last_close	avg_volume	pct_change_1_day	pct_change_1_week	pct_change_1_month	pct_change_3_months	pct_change_1_year	sma_5	ema_5	sma_13	ema_13	sma_20	ema_20	sma_34	ema_34	sma_50	ema_50	sma_89	ema_89	sma_200	ema_200	bband_upper	bband_lower	bband_mid	macd	adx	dmi_plus	dmi_minus	rsi	stoch_k	stoch_d	cci	psar	atr	williams_r	trix	stochrsi_k	stochrsi_d	momentum	candle	p_date
