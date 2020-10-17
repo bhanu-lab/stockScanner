@@ -39,13 +39,13 @@ func ScrapeContent(args []string) {
 		params.Set("json", bearishStocksScanner)
 	}
 	value := params.Encode()
-	log.Println("received encoded string is : ", value)
+	/*log.Println("received encoded string is : ", value)*/
 
 	err, htmlOutput := requests.CreateAPIRequestAndGetResponse(value, client)
 	if err != nil {
 		log.Panic("error while creating API request or while reading response")
 	}
-	log.Println("****************************************************")
+	//log.Println("****************************************************")
 	//log.Printf("response : %+v \n", htmlOutput)
 	log.Println("****************************************************")
 

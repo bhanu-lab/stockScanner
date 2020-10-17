@@ -1,2 +1,4 @@
 .idea/*
 /.vscode/launch.json
+.idea/inspectionProfiles/Project_Default.xml
+.idea/workspace.xml

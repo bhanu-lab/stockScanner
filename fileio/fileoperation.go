@@ -3,6 +3,7 @@ package fileio
 
 import (
 	"encoding/csv"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -72,7 +73,8 @@ func CreateCSVFile(stockScannerType int) (*os.File, error) {
 * return nil if write operation is successful
  */
 func WriteCSVFile(fp *os.File, data [][]string) error {
-	log.Printf("Received data to write to csv is %#v \n", data)
+	/*log.Printf("Received data to write to csv is %#v \n", data)*/
+	log.Println("Wrote data to ", fp.Name())
 	file, err := os.OpenFile(fp.Name(), os.O_CREATE|os.O_WRONLY, 0777)
 	if err != nil {
 		log.Panic("not able to open file :" + file.Name())
@@ -84,5 +86,6 @@ func WriteCSVFile(fp *os.File, data [][]string) error {
 		log.Panic("Not able to write data to file : " + file.Name())
 		return err
 	}
+	fmt.Print("****************************DONE*****************************")
 	return nil
 }
