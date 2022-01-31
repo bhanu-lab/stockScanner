@@ -5,12 +5,13 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"stockScanner/fileio"
+	"os"
 	"stockScanner/requests"
 	"stockScanner/types"
 	"stockScanner/utils"
 	"strings"
 
+	"github.com/olekukonko/tablewriter"
 	"golang.org/x/net/html"
 )
 
@@ -85,7 +86,6 @@ func ScrapeContent(args []string, options []string) {
 					stocksData = append(stocksData, rowData) //appending new row data to double array
 					rowData = make([]string, 0)
 				} else {
-					log.Println("I am in else condition of len(rowData)")
 					rowData = make([]string, 0)
 				}
 
@@ -118,15 +118,24 @@ func ScrapeContent(args []string, options []string) {
 		}
 	}
 
-	csvFile, err := fileio.CreateCSVFile(stockScannerType)
+	//csvFile, err := fileio.CreateCSVFile(stockScannerType)
 	if err != nil {
 		log.Panic("error while creating csv file check for errors while creating")
 	}
+	table := tablewriter.NewWriter(os.Stdout)
 	if ok := utils.IsValuePresentInStringSlice("s", options); ok { // if simple option given in command line filter out data
 		filteredData := utils.FilterSimpleTechnicalValues(stocksData)
-		err = fileio.WriteCSVFile(csvFile, filteredData)
+		//err = fileio.WriteCSVFile(csvFile, filteredData)
+		table.SetHeader(filteredData[0])
+		table.SetBorder(true)              // Set Border to false
+		table.AppendBulk(filteredData[1:]) // Add Bulk Data
+		table.Render()
+
 	} else { // if simple option is not provided in command line write all data
-		err = fileio.WriteCSVFile(csvFile, stocksData)
+		table.SetHeader(stocksData[0])
+		table.SetBorder(false)           // Set Border to false
+		table.AppendBulk(stocksData[1:]) // Add Bulk Data
+		table.Render()
 	}
 
 	if err != nil {
