@@ -2,10 +2,14 @@
 package Scrapper
 
 import (
+	"bytes"
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
+	"stockScanner/communication"
 	"stockScanner/fileio"
 	"stockScanner/filters"
 	"stockScanner/requests"
@@ -144,7 +148,7 @@ WriteData - writes data to different outputs based on command line argument
 func WriteData(selections map[string]string, stockScannerType int, filteredData [][]string) {
 	if val, ok := selections["o"]; ok {
 		if val == "table" {
-			WriteAsTable(filteredData)
+			WriteAsTable(filteredData, os.Stdout)
 		} else if val == "file" {
 			csvFile, err := fileio.CreateCSVFile(stockScannerType)
 			if err != nil {
@@ -154,15 +158,42 @@ func WriteData(selections map[string]string, stockScannerType int, filteredData 
 			if err != nil {
 				log.Panic("error occured while writing to file ", err)
 			}
+		} else if val == "mail" {
+			SendAsMail(filteredData)
 		}
 	}
 }
 
 /*
+SendAsMail - prepares data and sends mail read from config
+*/
+func SendAsMail(filteredData [][]string) {
+	data, err := ioutil.ReadFile("config/system.yaml")
+	if err != nil {
+		log.Fatal(err)
+	}
+	c := &types.Config{}
+	if err := c.Parse(data); err != nil {
+		log.Fatal(err)
+	}
+	buf := bytes.Buffer{}
+	WriteAsTable(filteredData, &buf)
+	msg := buf.Bytes()
+	body := string(msg)
+	log.Printf("Converted Message %s \n", body)
+	msgSent := "From: " + c.Mail.From + "\n" +
+		"To: " + strings.Join(c.Mail.To, ",") + "\n" +
+		"Subject: " + "Daily Update from PI" + "\n\n" + body
+	c.Mail.Message = []byte(msgSent)
+	log.Printf("Received mail details : [%+v] \n", c)
+	communication.SendMail(c)
+}
+
+/*
 WriteAsTable - Writes stocks data as table format on command line
 */
-func WriteAsTable(stocksData [][]string) {
-	table := tablewriter.NewWriter(os.Stdout)
+func WriteAsTable(stocksData [][]string, writer io.Writer) {
+	table := tablewriter.NewWriter(writer)
 	table.SetHeader(stocksData[0])
 	table.SetBorder(false)           // Set Border to false
 	table.AppendBulk(stocksData[1:]) // Add Bulk Data

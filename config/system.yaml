@@ -1,0 +1,8 @@
+mail:
+  from: 
+  to:
+    - 
+    - 
+  pass: 
+  host: "smtp.mail.yahoo.com"
+  port: 
