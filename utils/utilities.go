@@ -2,11 +2,12 @@
 package utils
 
 import (
-	"golang.org/x/net/html"
 	"log"
 	"sort"
 	"stockScanner/types"
 	"strings"
+
+	"golang.org/x/net/html"
 )
 
 /*
@@ -55,9 +56,32 @@ func GetCommandLineOptions(args []string) []string {
 	return options
 }
 
+/*
+ConstructArgsMap - constructs a map with key as option and value as value from
+command line arguments
+*/
+func ConstructArgsMap(args []string) map[string]string {
+	argValues := make(map[string]string)
+
+	for ind, arg := range args {
+
+		if strings.HasPrefix(arg, "-") {
+			choice := strings.ReplaceAll(arg, "-", "")
+			if !(len(args) <= ind+1) && !strings.HasPrefix(args[ind+1], "-") {
+				value := args[ind+1]
+				argValues[choice] = value
+			} else {
+				argValues[choice] = ""
+			}
+		}
+	}
+
+	return argValues
+}
+
 // ValidateCommandLineOptions validates input parameters options provided
 func ValidateCommandLineOptions(options []string) bool {
-	if len(options) > 2 {
+	if len(options) > 3 {
 		log.Printf("options provided are more than allowed")
 		return false
 	}

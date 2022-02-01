@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"stockScanner/fileio"
 	"stockScanner/requests"
 	"stockScanner/types"
 	"stockScanner/utils"
@@ -21,6 +22,8 @@ import (
  * -s simple technical details only
  */
 func ScrapeContent(args []string, options []string) {
+	selections := utils.ConstructArgsMap(args)
+	log.Println(selections)
 	index := 0
 	// Create HTTP client with timeout
 	client := &http.Client{}
@@ -29,7 +32,7 @@ func ScrapeContent(args []string, options []string) {
 	bullishStocksScanner := `{"action": "advanced_search", "info": {"0": {"cols": "last_close", "opts": ">", "cols1": "ema_5"}, "1": {"cols": "last_close", "opts": ">", "cols1": "ema_20"}, "2": {"cols": "last_close", "opts": "<", "cols1": "bband_upper"}, "3": {"cols": "", "opts": " like ", "cols1": ""}, "4": {"cols": "", "opts": " like ", "cols1": ""}, "5": {"cols": "atr", "opts": ">", "strs": "10"}, "6": {"cols": "adx", "opts": ">", "strs": "25"}, "7": {"cols": "avg_volume", "opts": ">", "strs": "500000"}, "8": {"cols": "p_symbol", "opts": " not like ", "strs": "%-%"}, "9": {"cols": "", "opts": " like ", "strs": ""}}}`
 	params := url.Values{}
 	stockScannerType := utils.GetStockScannerType(args)
-	log.Printf("stock scanner type received is %s \n", stockScannerType)
+	log.Printf("stock scanner type received is %d \n", stockScannerType)
 
 	// sets required stockScannerType in params for URL encoding from command line argument
 	if types.BULLISH == stockScannerType {
@@ -118,29 +121,50 @@ func ScrapeContent(args []string, options []string) {
 		}
 	}
 
-	//csvFile, err := fileio.CreateCSVFile(stockScannerType)
+	csvFile, err := fileio.CreateCSVFile(stockScannerType)
 	if err != nil {
 		log.Panic("error while creating csv file check for errors while creating")
 	}
-	table := tablewriter.NewWriter(os.Stdout)
+
 	if ok := utils.IsValuePresentInStringSlice("s", options); ok { // if simple option given in command line filter out data
 		filteredData := utils.FilterSimpleTechnicalValues(stocksData)
 		//err = fileio.WriteCSVFile(csvFile, filteredData)
-		table.SetHeader(filteredData[0])
-		table.SetBorder(true)              // Set Border to false
-		table.AppendBulk(filteredData[1:]) // Add Bulk Data
-		table.Render()
+		WriteData(selections, csvFile, filteredData)
 
 	} else { // if simple option is not provided in command line write all data
-		table.SetHeader(stocksData[0])
-		table.SetBorder(false)           // Set Border to false
-		table.AppendBulk(stocksData[1:]) // Add Bulk Data
-		table.Render()
+		WriteData(selections, csvFile, stocksData)
 	}
 
 	if err != nil {
 		log.Panic("not able to write to csv file error while writing to csv file")
 	}
+}
+
+/*
+WriteData - writes data to different outputs based on command line argument
+*/
+func WriteData(selections map[string]string, csvFile *os.File, filteredData [][]string) {
+	if val, ok := selections["o"]; ok {
+		if val == "table" {
+			WriteAsTable(filteredData)
+		} else if val == "file" {
+			err := fileio.WriteCSVFile(csvFile, filteredData)
+			if err != nil {
+				log.Panic("error occured while writing to file ", err)
+			}
+		}
+	}
+}
+
+/*
+WriteAsTable - Writes stocks data as table format on command line
+*/
+func WriteAsTable(stocksData [][]string) {
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader(stocksData[0])
+	table.SetBorder(false)           // Set Border to false
+	table.AppendBulk(stocksData[1:]) // Add Bulk Data
+	table.Render()
 }
 
 //simpleAttributes := []string{"p_symbol", "last_close", "avg_volume", "ema_8", "ema_20", "sma_50", "sma_200", "bband_upper", "bband_lower", "adx", "atr", "rsi"}
