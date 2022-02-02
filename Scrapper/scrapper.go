@@ -121,18 +121,16 @@ func ScrapeContent(args []string, options []string) {
 		}
 	}
 
-	csvFile, err := fileio.CreateCSVFile(stockScannerType)
 	if err != nil {
 		log.Panic("error while creating csv file check for errors while creating")
 	}
 
 	if ok := utils.IsValuePresentInStringSlice("s", options); ok { // if simple option given in command line filter out data
 		filteredData := utils.FilterSimpleTechnicalValues(stocksData)
-		//err = fileio.WriteCSVFile(csvFile, filteredData)
-		WriteData(selections, csvFile, filteredData)
+		WriteData(selections, stockScannerType, filteredData)
 
 	} else { // if simple option is not provided in command line write all data
-		WriteData(selections, csvFile, stocksData)
+		WriteData(selections, stockScannerType, stocksData)
 	}
 
 	if err != nil {
@@ -143,12 +141,16 @@ func ScrapeContent(args []string, options []string) {
 /*
 WriteData - writes data to different outputs based on command line argument
 */
-func WriteData(selections map[string]string, csvFile *os.File, filteredData [][]string) {
+func WriteData(selections map[string]string, stockScannerType int, filteredData [][]string) {
 	if val, ok := selections["o"]; ok {
 		if val == "table" {
 			WriteAsTable(filteredData)
 		} else if val == "file" {
-			err := fileio.WriteCSVFile(csvFile, filteredData)
+			csvFile, err := fileio.CreateCSVFile(stockScannerType)
+			if err != nil {
+				log.Panic("failed while creating csvfile ", err)
+			}
+			err = fileio.WriteCSVFile(csvFile, filteredData)
 			if err != nil {
 				log.Panic("error occured while writing to file ", err)
 			}
