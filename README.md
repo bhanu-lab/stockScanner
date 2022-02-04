@@ -11,5 +11,7 @@ if option s is not mentioned all technical values will be updated in csv sheet
  ## table view in command line
  `go run main.go -t bullish -o table -s` writes all data to a table format in command line
 
+ ![Alt table_view](/assets/table_view.png?raw=true "table view" )
+
 default option should provide bullish stocks, csv filename generated will be with time stamp for
 example Bearish_20201014085412.csv if bearish else Bullish_20201014085412.csv
