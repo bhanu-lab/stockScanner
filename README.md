@@ -1,4 +1,5 @@
 # stockScanner
+stockScanner application for tracking strong bullish and bearish stocks based on monthly, 21day, 6 month, bollinder bands
 
 ## stock variant
 `go run main.go -t bullish -o file` should provide a csv file with all bullish stocks
