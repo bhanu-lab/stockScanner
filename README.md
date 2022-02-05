@@ -15,3 +15,11 @@ if option s is not mentioned all technical values will be updated in csv sheet
 
 default option should provide bullish stocks, csv filename generated will be with time stamp for
 example Bearish_20201014085412.csv if bearish else Bullish_20201014085412.csv
+
+## mail option for sending in mail
+
+`go run main.go -t bullish -o mail -s` option can be used for sending mail by configuring config/system.yaml
+probably a cron job on raspberry pi or cloud server should be ideal usecase for this option. Configure all required
+details make sure from email is enabled to send mails as low sensitive applications.
+
+![Alt config](/assets/config.png?raw=true "config")
