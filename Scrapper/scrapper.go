@@ -7,9 +7,9 @@ import (
 	"net/url"
 	"os"
 	"stockScanner/fileio"
+	"stockScanner/filters"
 	"stockScanner/requests"
 	"stockScanner/types"
-	"stockScanner/utils"
 	"strings"
 
 	"github.com/olekukonko/tablewriter"
@@ -22,7 +22,7 @@ import (
  * -s simple technical details only
  */
 func ScrapeContent(args []string, options []string) {
-	selections := utils.ConstructArgsMap(args)
+	selections := filters.ConstructArgsMap(args)
 	log.Println(selections)
 	index := 0
 	// Create HTTP client with timeout
@@ -31,7 +31,7 @@ func ScrapeContent(args []string, options []string) {
 	bearishStocksScanner := `{"action": "advanced_search", "info": {"0": {"cols": "last_close", "opts": "<", "cols1": "ema_20"}, "1": {"cols": "last_close", "opts": "<", "cols1": "sma_50"}, "2": {"cols": "dmi_plus", "opts": "<", "cols1": "dmi_minus"}, "3": {"cols": "", "opts": " like ", "cols1": ""}, "4": {"cols": "", "opts": " like ", "cols1": ""}, "5": {"cols": "avg_volume", "opts": ">", "strs": "500000"}, "6": {"cols": "atr", "opts": ">", "strs": "10"}, "7": {"cols": "adx", "opts": ">", "strs": "25"}, "8": {"cols": "rsi", "opts": ">", "strs": "30"}, "9": {"cols": "p_symbol", "opts": " not like ", "strs": "%-%"}}}`
 	bullishStocksScanner := `{"action": "advanced_search", "info": {"0": {"cols": "last_close", "opts": ">", "cols1": "ema_5"}, "1": {"cols": "last_close", "opts": ">", "cols1": "ema_20"}, "2": {"cols": "last_close", "opts": "<", "cols1": "bband_upper"}, "3": {"cols": "", "opts": " like ", "cols1": ""}, "4": {"cols": "", "opts": " like ", "cols1": ""}, "5": {"cols": "atr", "opts": ">", "strs": "10"}, "6": {"cols": "adx", "opts": ">", "strs": "25"}, "7": {"cols": "avg_volume", "opts": ">", "strs": "500000"}, "8": {"cols": "p_symbol", "opts": " not like ", "strs": "%-%"}, "9": {"cols": "", "opts": " like ", "strs": ""}}}`
 	params := url.Values{}
-	stockScannerType := utils.GetStockScannerType(args)
+	stockScannerType := filters.GetStockScannerType(args)
 	log.Printf("stock scanner type received is %d \n", stockScannerType)
 
 	// sets required stockScannerType in params for URL encoding from command line argument
@@ -101,7 +101,7 @@ func ScrapeContent(args []string, options []string) {
 					eg := htmlTokens.Token()
 					// getting data from <td> tag
 					//log.Printf(strconv.Itoa(index) + "." +strings.ReplaceAll(eg.String(), "&lt;\\/td&gt;", ""))
-					actualString := utils.ReplaceUnnecessaryHtmlData(eg)
+					actualString := filters.ReplaceUnnecessaryHtmlData(eg)
 					if actualString != "" {
 						rowData = append(rowData, actualString)
 					}
@@ -113,7 +113,7 @@ func ScrapeContent(args []string, options []string) {
 				eg := htmlTokens.Token()
 
 				//log.Printf(" | "+strings.ReplaceAll(eg.String(), "&lt;\\/td&gt;", ""))
-				actualString := utils.ReplaceUnnecessaryHtmlData(eg)
+				actualString := filters.ReplaceUnnecessaryHtmlData(eg)
 				if actualString != "" {
 					rowData = append(rowData, actualString)
 				}
@@ -125,8 +125,8 @@ func ScrapeContent(args []string, options []string) {
 		log.Panic("error while creating csv file check for errors while creating")
 	}
 
-	if ok := utils.IsValuePresentInStringSlice("s", options); ok { // if simple option given in command line filter out data
-		filteredData := utils.FilterSimpleTechnicalValues(stocksData)
+	if ok := filters.IsValuePresentInStringSlice("s", options); ok { // if simple option given in command line filter out data
+		filteredData := filters.FilterSimpleTechnicalValues(stocksData)
 		WriteData(selections, stockScannerType, filteredData)
 
 	} else { // if simple option is not provided in command line write all data

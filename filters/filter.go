@@ -1,5 +1,5 @@
-// utils provides utilities for handling various utility operations
-package utils
+// filters provides utilities for handling various utility operations
+package filters
 
 import (
 	"log"

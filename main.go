@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 	"stockScanner/Scrapper"
-	"stockScanner/utils"
+	"stockScanner/filters"
 )
 
 /*
@@ -13,9 +13,9 @@ import (
 func main() {
 	// Read command line arguments
 	argsWithoutProg := os.Args[1:]
-	allOptions := utils.GetCommandLineOptions(argsWithoutProg)
+	allOptions := filters.GetCommandLineOptions(argsWithoutProg)
 	log.Printf("All options received : %+v \n", allOptions)
-	if ok := utils.ValidateCommandLineOptions(allOptions); !ok {
+	if ok := filters.ValidateCommandLineOptions(allOptions); !ok {
 		log.Printf("validation failed please revisit options provided")
 	} else {
 		//log.Printf("all arguments %#v \n", argsWithProg)
