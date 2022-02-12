@@ -23,4 +23,6 @@ example Bearish_20201014085412.csv if bearish else Bullish_20201014085412.csv
 probably a cron job on raspberry pi or cloud server should be ideal usecase for this option. Configure all required
 details make sure from email is enabled to send mails as low sensitive applications.
 
+Moved to read system config from home directory. Create system.yaml in home directory under ~/.stockScanner/system.yaml
+
 ![Alt config](/assets/config.png?raw=true "config")
