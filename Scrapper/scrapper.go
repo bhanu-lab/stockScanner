@@ -168,7 +168,8 @@ func WriteData(selections map[string]string, stockScannerType int, filteredData 
 SendAsMail - prepares data and sends mail read from config
 */
 func SendAsMail(filteredData [][]string) {
-	data, err := ioutil.ReadFile("config/system.yaml")
+	home := os.Getenv("HOME")
+	data, err := ioutil.ReadFile(home+"/.stockScanner/system.yaml")
 	if err != nil {
 		log.Fatal(err)
 	}
